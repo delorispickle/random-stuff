@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <script src="p5.js"></script>
+    <script src="sketch2.js"></script>
+  </head>
+  Number:<input id="number">
+  </br>
+  Radius:<input id="radius">
+  </br>
+  <button id="clear" type="button" onclick="clr()">Clear</button>
+  <script>
+	document.getElementById("number").value = 1
+	document.getElementById("radius").value = 50
+	document.getElementById("number").onmouseover = function() {
+		mo = true
+	}
+	document.getElementById("number").onmouseout = function() {
+		mo = false
+	}
+	document.getElementById("radius").onmouseover = function() {
+		mo2 = true
+	}
+	document.getElementById("radius").onmouseout = function() {
+		mo2 = false
+	}
+	document.getElementById("clear").onmouseover = function() {
+		mo3 = true
+	}
+	document.getElementById("clear").onmouseout = function() {
+		mo3 = false
+	}
+  </script>
+</html>
