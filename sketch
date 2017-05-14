@@ -1,0 +1,109 @@
+var sx = window.innerWidth;
+var sy = window.innerHeight;
+function addVectors(v1,v2) {
+	v1.x += v2.x;
+	v1.y += v2.y;
+	return v1
+}
+function merge(t0,t1){
+	for(sxys = 0; sxys < t1.length; sxys++){
+		t0.push(t1[sxys]);
+	}
+}
+function isOdd(x){
+	if(x % 2 == 1){
+		return true;
+	} else {
+		return false;
+	}
+}
+function ang(n){
+	return (180-((n-2)*180)/n)/2;
+}
+
+function setup() {
+	createCanvas(sx,sy);
+}
+
+function clr(){
+	background(255)
+}
+
+function circlepoints(x,y,n,r) {
+	var points = [];
+	for(k = 0; k < 360; k += (360/n)) {
+		var t = k - 90;
+		var l = createVector(x+(r*Math.cos(t*Math.PI/180)),y+(r*Math.sin(t*Math.PI/180)));
+		points.push(l);
+	}
+	return points;
+}
+
+function shape(x,y,n,r){
+	this.pos = createVector(x,y);
+	this.sides = n;
+	this.color = {
+		r: Math.floor(Math.random()*255),
+		g: Math.floor(Math.random()*255),
+		b: Math.floor(Math.random()*255)
+	};
+	this.rotspeed = Math.random()*2-1;
+	this.radius = r;
+	this.vel = createVector(Math.floor(Math.random() * 5)-2.5,Math.floor(Math.random() * 5)-2.5)
+	this.rot = 0;
+	this.d = function(){
+		stroke(this.color.r, this.color.g, this.color.b)
+		var p = [];
+		var st = -90+this.rot;
+		if(!isOdd(this.sides)){
+			st = -90+this.rot-ang(this.sides);
+		}
+		for(k = st; k < 360+st; k += (360/this.sides)) {
+			var l = createVector(this.pos.x+(this.radius*Math.cos(k*Math.PI/180)),this.pos.y+(this.radius*Math.sin(k*Math.PI/180)));
+			p.push(l);
+		}
+		this.points = p;
+		for(i = 0; i < this.points.length-1; i++) {
+			line(this.points[i].x, this.points[i].y, this.points[i+1].x, this.points[i+1].y)
+		}
+		line(this.points[this.points.length-1].x, this.points[this.points.length-1].y, this.points[0].x, this.points[0].y)
+	};
+	this.updatePos = function(){
+		this.pos = addVectors(this.pos,this.vel);
+	}
+}
+
+var mo;
+var mo2;
+var mo3;
+var shapes = [];
+function mousePressed() {
+	if(mo || mo2 || mo3){
+		return
+	}
+	var number = document.getElementById("number").value;
+	var radius = document.getElementById("radius").value;
+	var s = new shape(mouseX,mouseY,number,radius);
+	shapes.push(s);
+}
+function draw(){
+	background(255);
+	if(Math.floor(Math.random()*2) == 1){
+		var s = new shape(
+			Math.floor(Math.random() * sx),
+			Math.floor(Math.random() * sy),
+			Math.floor(Math.random() * 7) + 3,
+			Math.floor(Math.random() * 50) + 50,
+		)
+		shapes.push(s);
+	}
+	for(sh = 1; sh < shapes.length; sh++){
+		shapes[sh].updatePos()
+		shapes[sh].radius /= 1.01
+		shapes[sh].rot += shapes[sh].rotspeed
+		shapes[sh].d()
+		if(shapes[sh].radius <= 5){
+			shapes.splice(sh,1);
+		}
+	}
+}
